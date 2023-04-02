@@ -1,16 +1,12 @@
 package com.example.marmoshka
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 const val COLUMNS_COUNT = 9
@@ -52,19 +48,8 @@ class MainActivity : AppCompatActivity() {
         recyclerViewKeyboard = findViewById(R.id.recyclerViewKeyboard)
 
         with (recyclerViewKeyboard) {
-            layoutManager = GridLayoutManager(context, 9)
+            layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
             adapter = KeyBoardViewAdapter()
         }
-    }
-
-    override fun onCreateView(
-        parent: View?,
-        name: String,
-        context: Context,
-        attrs: AttributeSet
-    ): View? {
-
-
-        return super.onCreateView(parent, name, context, attrs)
     }
 }
