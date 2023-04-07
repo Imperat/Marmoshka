@@ -14,11 +14,11 @@ class ValuesChooser(private val valuesFiller: ValuesFiller) {
                 it.isUsed = false;
             }
 
-            onUpdateUICallback?.let { it1 -> it1() }
+            onUpdateUICallback?.let { it1 -> it1(null) }
         }
     }
 
-    private var onUpdateUICallback: (() -> Unit)? = null;
+    private var onUpdateUICallback: ((Int?) -> Unit)? = null;
 
     fun getItemCount(): Int {
         return values.size;
@@ -35,10 +35,10 @@ class ValuesChooser(private val valuesFiller: ValuesFiller) {
 
         valueItem.isUsed = true;
         valuesFiller.addValue(valueItem.number)
-        onUpdateUICallback?.let { it() }
+        onUpdateUICallback?.let { it(valueItem.number - 1) }
     }
 
-    fun onUpdateUI(function: () -> Unit) {
+    fun onUpdateUI(function: (index: Int?) -> Unit) {
         onUpdateUICallback = function;
     }
 }

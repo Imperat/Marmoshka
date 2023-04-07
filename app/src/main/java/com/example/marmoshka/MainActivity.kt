@@ -27,11 +27,11 @@ class MainActivity : AppCompatActivity() {
         valuesChooser = ValuesChooser(valuesFiller)
 
         valuesChooser.onUpdateUI {
-            updateKeyboardAdapter()
+            updateKeyboardAdapter(it)
         }
 
         valuesFiller.onUpdateUI {
-            updateValuesAdapter()
+            updateValuesAdapter(it)
         }
 
         updateKeyboardUI()
@@ -42,12 +42,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateKeyboardUI() {
         updateKeyboardLayoutManager()
-        updateKeyboardAdapter()
+        updateKeyboardAdapter(null)
     }
 
     private fun updateValuesUI() {
         updateValuesLayoutManager();
-        updateValuesAdapter();
+        updateValuesAdapter(null);
     }
 
     private fun updateValuesLayoutManager() {
@@ -56,14 +56,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateValuesAdapter() {
+    private fun updateValuesAdapter(position: Int?) {
         with (recyclerViewResults) {
-            adapter = ValuesViewAdapter(valuesFiller)
+            if (position != null) {
+                adapter?.notifyItemChanged(position);
+                return;
+            }
+
+            adapter = ValuesViewAdapter(valuesFiller);
         }
     }
 
-    private fun updateKeyboardAdapter() {
+    private fun updateKeyboardAdapter(position: Int?) {
         with (recyclerViewKeyboard) {
+            if (position != null) {
+                adapter?.notifyItemChanged(position)
+                return
+            }
+
             adapter = KeyBoardViewAdapter(valuesChooser)
         }
     }
