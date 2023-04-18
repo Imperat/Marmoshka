@@ -1,11 +1,11 @@
 package com.example.marmoshka
 
 
-data class ValueItem(val number: Int, var isUsed: Boolean)
+class ValueItem(var index: Int, val number: Int, var isUsed: Boolean)
 
 class ValuesChooser(private val valuesFiller: ValuesFiller) {
-    private val values = (1..45).toList().map {
-        ValueItem(it, false);
+    private var values = (1..45).toList().mapIndexed{
+        index, i -> ValueItem(index, i, false)
     }
 
     init {
@@ -35,10 +35,16 @@ class ValuesChooser(private val valuesFiller: ValuesFiller) {
 
         valueItem.isUsed = true;
         valuesFiller.addValue(valueItem.number)
-        onUpdateUICallback?.let { it(valueItem.number - 1) }
+        onUpdateUICallback?.let { it(valueItem.index) }
     }
 
     fun onUpdateUI(function: (index: Int?) -> Unit) {
         onUpdateUICallback = function;
+    }
+
+    fun shuffle() {
+        values = values.shuffled().mapIndexed{
+            index, value -> ValueItem(index, value.number, value.isUsed)
+        }
     }
 }
