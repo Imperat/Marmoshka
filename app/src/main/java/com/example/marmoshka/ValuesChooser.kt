@@ -11,14 +11,15 @@ class ValuesChooser(private val valuesFiller: ValuesFiller) {
     init {
         valuesFiller.onRowFilled {
             values.forEach {
-                it.isUsed = false;
+                if (it.isUsed) {
+                    it.isUsed = false;
+                    onUpdateUICallback?.let { it1 -> it1(it.index) }
+                }
             }
-
-            onUpdateUICallback?.let { it1 -> it1(null) }
         }
     }
 
-    private var onUpdateUICallback: ((Int?) -> Unit)? = null;
+    private var onUpdateUICallback: ((Int) -> Unit)? = null;
 
     fun getItemCount(): Int {
         return values.size;
@@ -38,7 +39,7 @@ class ValuesChooser(private val valuesFiller: ValuesFiller) {
         onUpdateUICallback?.let { it(valueItem.index) }
     }
 
-    fun onUpdateUI(function: (index: Int?) -> Unit) {
+    fun onUpdateUI(function: (index: Int) -> Unit) {
         onUpdateUICallback = function;
     }
 

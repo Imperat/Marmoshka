@@ -32,39 +32,51 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_main)
-        recyclerViewResults = findViewById(R.id.recyclerViewResults)
-        recyclerViewKeyboard = findViewById(R.id.recyclerViewKeyboard)
-
         valuesFiller = ValuesFiller()
         valuesChooser = ValuesChooser(valuesFiller)
 
         valuesChooser.onUpdateUI {
-            updateKeyboardAdapter(it)
+            recyclerViewKeyboard.adapter?.notifyItemChanged(it)
         }
 
         valuesFiller.onUpdateUI {
-            updateValuesAdapter(it)
+            recyclerViewResults.adapter?.notifyItemChanged(it);
         }
 
-        updateKeyboardUI()
-        updateValuesUI()
+        setContentView(R.layout.activity_main)
+        recyclerViewResults = findViewById<RecyclerView?>(R.id.recyclerViewResults).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = ValuesViewAdapter(valuesFiller)
+        }
+        recyclerViewKeyboard = findViewById<RecyclerView?>(R.id.recyclerViewKeyboard).apply {
+            layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
+            adapter = KeyBoardViewAdapter(valuesChooser)
+        }
 
         // Getting the Sensor Manager instance
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensorManager?.registerListener(sensorListener, sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager?.registerListener(
+            sensorListener,
+            sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
 
         acceleration = 10f
         currentAcceleration = SensorManager.GRAVITY_EARTH
         lastAcceleration = SensorManager.GRAVITY_EARTH
 
-        Toast.makeText(this, "Давай, Мармошка! Выиграем $1000000 прямо сегодня!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this,
+            "Давай, Мармошка! Выиграем $1000000 прямо сегодня!",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun onResume() {
-        sensorManager?.registerListener(sensorListener, sensorManager!!.getDefaultSensor(
-            Sensor .TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL
+        sensorManager?.registerListener(
+            sensorListener, sensorManager!!.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER
+            ), SensorManager.SENSOR_DELAY_NORMAL
         )
         super.onResume()
     }
@@ -92,53 +104,10 @@ class MainActivity : AppCompatActivity() {
             // acceleration value is over 12
             if (acceleration > 12) {
                 valuesChooser.shuffle()
-                updateKeyboardAdapter(null)
+                recyclerViewKeyboard.adapter?.notifyDataSetChanged()
             }
         }
+
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
-    }
-
-    private fun updateKeyboardUI() {
-        updateKeyboardLayoutManager()
-        updateKeyboardAdapter(null)
-    }
-
-    private fun updateValuesUI() {
-        updateValuesLayoutManager();
-        updateValuesAdapter(null);
-    }
-
-    private fun updateValuesLayoutManager() {
-        with (recyclerViewResults) {
-            layoutManager = LinearLayoutManager(context)
-        }
-    }
-
-    private fun updateValuesAdapter(position: Int?) {
-        with (recyclerViewResults) {
-            if (position != null) {
-                adapter?.notifyItemChanged(position);
-                return;
-            }
-
-            adapter = ValuesViewAdapter(valuesFiller);
-        }
-    }
-
-    private fun updateKeyboardAdapter(position: Int?) {
-        with (recyclerViewKeyboard) {
-            if (position != null) {
-                adapter?.notifyItemChanged(position)
-                return
-            }
-
-            adapter = KeyBoardViewAdapter(valuesChooser)
-        }
-    }
-
-    private fun updateKeyboardLayoutManager() {
-        with (recyclerViewKeyboard) {
-            layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
-        }
     }
 }

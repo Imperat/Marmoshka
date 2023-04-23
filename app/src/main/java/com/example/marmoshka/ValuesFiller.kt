@@ -23,7 +23,7 @@ class RowWrapper {
 class ValuesFiller {
     private val rows = (1..6).map { RowWrapper() }
     private var currentRowIndex: Int = 0;
-    private var onUpdateUICallback: ((Int?) -> Unit)? = null;
+    private var onUpdateUICallback: ((Int) -> Unit)? = null;
     private var onRowFilledCallback: (() -> Unit)? = null;
 
     fun addValue(value: Int) {
@@ -46,7 +46,7 @@ class ValuesFiller {
         return rows[position]
     }
 
-    fun onUpdateUI(function: (Int?) -> Unit) {
+    fun onUpdateUI(function: (Int) -> Unit) {
         onUpdateUICallback = function;
     }
 
