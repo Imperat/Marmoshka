@@ -16,7 +16,7 @@ class RowWrapper {
     }
 
     fun isFilled(): Boolean {
-        return values.none { it == null }
+        return currentIndex == 6
     }
 }
 

@@ -23,3 +23,12 @@ fun setNumberOrEmpty(button: AppCompatButton, number: Int?) {
     }
   }
 }
+
+@BindingAdapter("app:setItem")
+fun setItem(button: AppCompatButton, item: ValueItem) {
+  button.text = item.number.toString()
+  button.background = if (item.isUsed) ContextCompat.getDrawable(
+    button.context,
+    R.drawable.border_used_button
+  ) else ContextCompat.getDrawable(button.context, R.drawable.border_button)
+}
