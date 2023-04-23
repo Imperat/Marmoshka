@@ -1,49 +1,31 @@
 package com.example.marmoshka
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.marmoshka.databinding.ValuesRowBinding
 
 class ValuesViewAdapter(private val valuesFiller: ValuesFiller): RecyclerView.Adapter<ValuesViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ValuesViewAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.values_row, parent, false)
+        val binding : ValuesRowBinding =
+            DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.values_row, parent, false)
 
-        return ViewHolder(
-            view,
-            ContextCompat.getDrawable(parent.context, R.drawable.value_button),
-            ContextCompat.getDrawable(parent.context, R.drawable.value_button_filled),
-        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ValuesViewAdapter.ViewHolder, position: Int) {
-        val buttons = listOf<Button>(
-            holder.button1,
-            holder.button2,
-            holder.button3,
-            holder.button4,
-            holder.button5,
-            holder.button6,
-        );
-
         val row = valuesFiller.getRow(position).getValues()
 
-        for (i in 0..5) {
-            if (row[i] == null) {
-                buttons[i].text = "#";
-                buttons[i].background = holder.regularButton;
-            } else {
-                buttons[i].text = row[i].toString();
-                buttons[i].background = holder.usedButton;
-            }
-        }
+        holder.binding.val1 = row[0];
+        holder.binding.val2 = row[1];
+        holder.binding.val3 = row[2];
+        holder.binding.val4 = row[3];
+        holder.binding.val5 = row[4];
+        holder.binding.val6 = row[5];
     }
 
     override fun getItemCount(): Int {
@@ -51,24 +33,7 @@ class ValuesViewAdapter(private val valuesFiller: ValuesFiller): RecyclerView.Ad
     }
 
     inner class ViewHolder(
-        view: View,
-        val regularButton: Drawable?,
-        val usedButton: Drawable?
-    ): RecyclerView.ViewHolder(view) {
-        val button1: Button;
-        val button2: Button;
-        val button3: Button;
-        val button4: Button;
-        val button5: Button;
-        val button6: Button;
-
-        init {
-            button1 = view.findViewById(R.id.button1)
-            button2 = view.findViewById(R.id.button2)
-            button3 = view.findViewById(R.id.button3)
-            button4 = view.findViewById(R.id.button4)
-            button5 = view.findViewById(R.id.button5)
-            button6 = view.findViewById(R.id.button6)
-        }
+        val binding: ValuesRowBinding,
+    ): RecyclerView.ViewHolder(binding.root) {
     }
 }
